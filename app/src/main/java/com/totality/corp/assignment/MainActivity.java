@@ -49,17 +49,23 @@ public class MainActivity extends AppCompatActivity {
 
         Layout layout = new StaticLayout(s.toString(),
                         textPaint,
-                        350 -  mainBinding.editText.getCompoundPaddingStart() - mainBinding.editText.getCompoundPaddingEnd(),
+                  350 -  mainBinding.editText.getCompoundPaddingStart() - mainBinding.editText.getCompoundPaddingEnd(),
                         Layout.Alignment.ALIGN_CENTER,
                         1,
                         0,
                         true);
 
 
+        // remove all the previous spans
+        AbsoluteSizeSpan[] span = s.getSpans(0,s.length(),AbsoluteSizeSpan.class);
+        for (AbsoluteSizeSpan absoluteSizeSpan : span) {
+            s.removeSpan(absoluteSizeSpan);
+        }
+
+        // set spans in each line seperately
         for (int i=0;i<layout.getLineCount();i++){
 
             String line = s.toString().substring(layout.getLineStart(i),layout.getLineEnd(i));
-
             s.setSpan(new AbsoluteSizeSpan((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,getNewSize(line),getResources().getDisplayMetrics())),
                     layout.getLineStart(i),
                     layout.getLineEnd(i),
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 
     private boolean hasLineBreak(String text,float size){
         textPaint.setTextSize(size);
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     private float getNewSize(String line){
         int lowSize = 16;
-        int highSize = (int) (mainBinding.editText.getTextSize()/getResources().getDisplayMetrics().scaledDensity);
+        int highSize = 80;
         int currentSize = lowSize + (int) Math.floor((highSize - lowSize) / 2f);
         while (lowSize < currentSize) {
             if (hasLineBreak(line, currentSize)) {
