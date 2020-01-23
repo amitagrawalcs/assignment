@@ -14,6 +14,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.util.TypedValue;
 
 
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding mainBinding;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void update(final Editable s){
-        textPaint.setTextSize(18);
+        textPaint.setTextSize(16);
 
         Layout layout = new StaticLayout(s.toString(),
                         textPaint,
@@ -54,8 +55,11 @@ public class MainActivity extends AppCompatActivity {
                         0,
                         true);
 
-        for (int i=0;i<mainBinding.editText.getLineCount();i++){
-            String line = getLine(s.toString(),i);
+
+        for (int i=0;i<layout.getLineCount();i++){
+
+            String line = s.toString().substring(layout.getLineStart(i),layout.getLineEnd(i));
+
             s.setSpan(new AbsoluteSizeSpan((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,getNewSize(line),getResources().getDisplayMetrics())),
                     layout.getLineStart(i),
                     layout.getLineEnd(i),
@@ -66,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean hasLineBreak(String text,float size){
+
         textPaint.setTextSize(size);
-        Layout layout =
-                new StaticLayout(
+        Layout layout = new StaticLayout(
                         text,
                         textPaint,
                         350 - mainBinding.editText.getCompoundPaddingStart() - mainBinding.editText.getCompoundPaddingEnd(),
@@ -80,42 +84,21 @@ public class MainActivity extends AppCompatActivity {
         return layout.getLineCount()>1;
     }
 
-    private int getLineCount(String text){
-        textPaint.setTextSize(18);
-        Layout layout =
-                new StaticLayout(
-                        text,
-                        textPaint,
-                        350 -  mainBinding.editText.getCompoundPaddingStart() - mainBinding.editText.getCompoundPaddingEnd(),
-                        Layout.Alignment.ALIGN_CENTER,
-                        1,
-                        0,
-                        true);
-
-        return layout.getLineCount();
-    }
-
-    private String getLine(String text,int lineNumber){
-        textPaint.setTextSize(18);
-        Layout layout =
-                new StaticLayout(
-                        text,
-                        textPaint,
-                        350 -  mainBinding.editText.getCompoundPaddingStart() - mainBinding.editText.getCompoundPaddingEnd(),
-                        Layout.Alignment.ALIGN_CENTER,
-                        1,
-                        0,
-                        true);
-        return text.substring(layout.getLineStart(lineNumber),layout.getLineEnd(lineNumber));
-
-    }
 
     private float getNewSize(String line){
-        float currentSize = 80;
-        while (hasLineBreak(line, currentSize)) {
-            currentSize -= 1;
+        int lowSize = 16;
+        int highSize = 80;
+        int currentSize = lowSize + (int) Math.floor((highSize - lowSize) / 2f);
+        while (lowSize < currentSize) {
+            if (hasLineBreak(line, currentSize)) {
+                highSize = currentSize;
+            } else {
+                lowSize = currentSize;
+            }
+            currentSize = lowSize + (int) Math.floor((highSize - lowSize) / 2f);
         }
-        return currentSize<18?18:currentSize;
+
+        return currentSize;
     }
 
 }
