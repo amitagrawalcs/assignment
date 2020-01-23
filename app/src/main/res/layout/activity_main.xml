@@ -8,6 +8,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#FFFFFF"
         >
 
         <com.google.android.material.appbar.AppBarLayout
@@ -26,7 +27,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             >
 
@@ -35,8 +36,9 @@
                 android:layout_width="350sp"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText"
-                android:textSize="72sp"
-                android:gravity="center"
+                android:textSize="80sp"
+                android:backgroundTint="#00000000"
+                android:hint="Type Here"
                 />
 
         </RelativeLayout>
