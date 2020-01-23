@@ -66,11 +66,9 @@ public class MainActivity extends AppCompatActivity {
                     Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         }
-
     }
 
     private boolean hasLineBreak(String text,float size){
-
         textPaint.setTextSize(size);
         Layout layout = new StaticLayout(
                         text,
@@ -79,15 +77,15 @@ public class MainActivity extends AppCompatActivity {
                         Layout.Alignment.ALIGN_NORMAL,
                         1,
                         0,
-                        true);
+                        true
+        );
 
         return layout.getLineCount()>1;
     }
 
-
     private float getNewSize(String line){
         int lowSize = 16;
-        int highSize = 80;
+        int highSize = (int) (mainBinding.editText.getTextSize()/getResources().getDisplayMetrics().scaledDensity);
         int currentSize = lowSize + (int) Math.floor((highSize - lowSize) / 2f);
         while (lowSize < currentSize) {
             if (hasLineBreak(line, currentSize)) {
